@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="cn">
+  <head>
+<link rel="stylesheet" href="v5.3.0/css/ol.css">
+<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+<script src="v5.3.0/build/ol.js"></script>
+    <style>
+      .map {
+        height: 560px;
+        width: 100%;
+      }
+    </style>
+    <title>OpenLayers example</title>
+  </head>
+  <body>
+    <h2>My Map</h2>
+    <div id="map" class="map"></div>
+	<div id="map2" class="map"></div>
+    <script type="text/javascript">
+      var map = new ol.Map({
+        target: 'map',
+        layers: [
+          new ol.layer.Tile({
+            source: new ol.source.OSM()
+          })
+        ],
+        view: new ol.View({
+          center: ol.proj.fromLonLat([37.41, 8.82]),
+          zoom: 4
+        })
+      });
+    </script>
+	<script type="text/javascript">
+		var map = L.map('map2').setView([36.52,120.31], 13);
+		 L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+     maxZoom: 18
+   }).addTo(map);
+   var marker = L.marker([36.52,120.31]).addTo(map);
+   
+map.locate({
+  setView: true,
+  maxZoom: 16
+});
+   map.on('locationfound', function(e) {
+  var radius = e.accuracy / 2;
+  L.marker(e.latlng).addTo(map).bindPopup("你就在这个圈内");
+  L.circle(e.latlng, radius).addTo(map);
+});
+map.on('locationerror', function(e) {
+  console.log('定位出错=====>', e);
+});
+	</script>
+  </body>
+</html>
